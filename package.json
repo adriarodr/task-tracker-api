@@ -12,7 +12,7 @@
     "url": "git+https://github.com/adriarodr/task-tracker-api.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Adrian R",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
@@ -23,6 +23,13 @@
     "@eslint/js": "^10.0.1",
     "eslint": "^10.5.0",
     "eslint-config-prettier": "^10.1.8",
-    "globals": "^17.6.0"
+    "globals": "^17.6.0",
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongodb": "^7.3.0",
+    "mongoose": "^9.7.1"
   }
 }
