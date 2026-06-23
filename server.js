@@ -4,13 +4,15 @@ const express = require('express');
 const connectDB = require('./config/db');
 const app = express();
 
+const authRoutes = require('./routes/authRoutes');
+
 const PORT = process.env.PORT;
 
 app.use(express.json());
 
 connectDB();
 
-app.get('/api', (req, res) => {
+app.get('/', (req, res) => {
   res.send('Welcome to Task Tracker API!');
 });
 
@@ -21,6 +23,8 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+app.use('/api/auth', authRoutes);
+
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/api`);
+  console.log(`Server running at http://localhost:${PORT}/`);
 });
