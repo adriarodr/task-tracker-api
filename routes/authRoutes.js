@@ -1,27 +1,53 @@
 const express = require('express');
-const router = express.Router();
-
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const router = express.Router();
+
 const User = require('../models/User');
 
-// Registration Route
+// Helper function to generate a JWT
+const generateToken = (user) => {
+  return jwt.sign(
+    {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '1h' },
+  );
+};
+
+// @route POST /api/auth/register
+// @desc Register a new user
 router.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;
-
   try {
-    const hash = await bcrypt.hash(password, 10);
+    const { name, email, password } = req.body;
 
+    // Check if all fields are included
+    if (!name || !email || !password) {
+      res.status(400).json({
+        message: 'Please provide name, email and password',
+      });
+    }
+
+    // Hashes the password before storing it
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user user the User Schema
     const newUser = new User({
       name: name,
       email: email,
-      password: hash,
+      password: hashPassword,
     });
+
+    // Save the user in the database
     const savedUser = await newUser.save();
 
+    // Return the user information
     res.status(201).json({
-      message: 'Account created successfully',
+      message: 'User registered successfully',
       user: {
         id: savedUser._id,
         name: savedUser.name,
@@ -29,24 +55,22 @@ router.post('/register', async (req, res) => {
       },
     });
   } catch (error) {
-    // TODO: Write better error handling
-    if (!name | !email | !password) {
+    if (error.code === 11000) {
+      // Return error message if user with this email already exists
       res.status(400).json({
-        message: 'Name, email and password are required',
-      });
-    } else if (error.code === 11000) {
-      res.status(400).json({
-        message: 'Account with that email already exist',
+        message: 'A user with this email already exists',
       });
     } else {
       res.status(400).json({
         message: 'Unable to create account',
+        error: error.message,
       });
     }
   }
 });
 
-// Login Route
+// @route POST /api/auth/login
+// @desc Log in an existing user
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -55,31 +79,28 @@ router.post('/login', async (req, res) => {
     if (!email || !password) {
       return res
         .status(400)
-        .json({ message: 'Email and password are required' });
+        .json({ message: 'Please provide email and password' });
     }
+
+    // Find the user by email
     const user = await User.findOne({ email }).select('+password');
 
+    // If the user does not exist, return an error
     if (!user) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    // Compare the entered password with stored hashed password
+    // Compare the entered password to the stored hashed password
     const isSamePassword = await bcrypt.compare(password, user.password);
 
     if (!isSamePassword) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    // Return a JWT token if login is successful
-    const jwtToken = jwt.sign(
-      {
-        id: user._id,
-        email: user.email,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' },
-    );
+    // Generate a new token after successful login
+    const jwtToken = generateToken(user);
 
+    // Return the user information and token
     res.status(200).json({
       message: 'Login successful',
       user: {
@@ -91,7 +112,8 @@ router.post('/login', async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: 'Server Error',
+      message: 'Server error during login',
+      error: error.message,
     });
   }
 });
