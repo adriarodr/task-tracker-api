@@ -5,6 +5,7 @@ const connectDB = require('./config/db');
 const app = express();
 
 const authRoutes = require('./routes/authRoutes');
+const taskRoutes = require('./routes/taskRoutes');
 
 const PORT = process.env.PORT;
 
@@ -24,6 +25,8 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+
+app.use('/api', taskRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);
