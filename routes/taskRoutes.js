@@ -6,9 +6,10 @@ const Task = require('../models/Task');
 // import middleware so all task routes are protected
 const authMiddleware = require('../middleware/authMiddleware');
 
-// @route - GET /api/tasks
-// @desc - Returns all tasks for the logged-in user
-router.get('/tasks', authMiddleware, async (req, res) => {
+// @route   GET /api/tasks
+// @desc    Returns all tasks for the logged-in user
+// @access  Private
+router.get('/', authMiddleware, async (req, res) => {
   try {
     // Get all the tasks by user id
     const tasks = await Task.find({ user: req.user.id }).exec();
@@ -23,8 +24,9 @@ router.get('/tasks', authMiddleware, async (req, res) => {
   }
 });
 
-// @route - GET /api/tasks/:id
-// @desc - Return one task by Id for the logged-in user
+// @route   GET /api/tasks/:id
+// @desc    Return one task by Id for the logged-in user
+// @access  Private
 router.get('/tasks/:id', authMiddleware, async (req, res) => {
   try {
     // Get a task by its id created by the user
@@ -50,8 +52,9 @@ router.get('/tasks/:id', authMiddleware, async (req, res) => {
   }
 });
 
-// @route - POST /api/tasks
-// @desc - Creates a new task for the logged-in user
+// @route   POST /api/tasks
+// @desc    Creates a new task for the logged-in user
+// @access  Private
 router.post('/tasks', authMiddleware, async (req, res) => {
   try {
     const { title, description, isCompleted, dueDate } = req.body;
@@ -95,8 +98,9 @@ router.post('/tasks', authMiddleware, async (req, res) => {
   }
 });
 
-// @route - PUT /api/tasks/:id
-// @desc - Updates an existing task for the logged-in user
+// @route   PUT /api/tasks/:id
+// @desc    Updates an existing task for the logged-in user
+// @acess   Private
 router.put('/tasks/:id', authMiddleware, async (req, res) => {
   try {
     // Updates the task
@@ -122,8 +126,9 @@ router.put('/tasks/:id', authMiddleware, async (req, res) => {
   }
 });
 
-// @route - DELETE /api/tasks/:id
-// @desc - Deletes a task for the logged-in user
+// @route   DELETE /api/tasks/:id
+// @desc    Deletes a task for the logged-in user
+// @acess   Private
 router.delete('/tasks/:id', authMiddleware, async (req, res) => {
   try {
     // Deletes the task
