@@ -107,7 +107,7 @@ router.put('/tasks/:id', authMiddleware, async (req, res) => {
     const query = { _id: req.params.id, user: req.user.id };
 
     const updatedTask = await Task.findOneAndUpdate(query, req.body, {
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     });
 
