@@ -37,7 +37,7 @@ router.get('/tasks/:id', authMiddleware, async (req, res) => {
 
     // If the task does not exist, return an error
     if (!tasks) {
-      return res.status(400).json({
+      return res.status(404).json({
         message: 'Task not found',
       });
     }
@@ -113,7 +113,9 @@ router.put('/tasks/:id', authMiddleware, async (req, res) => {
 
     // If the task does not exist, return an error
     if (!updatedTask) {
-      return res.status(404).json({ message: 'Task not found' });
+      return res.status(404).json({
+        message: 'Task not found',
+      });
     }
 
     // Return success message and update task
@@ -130,7 +132,7 @@ router.put('/tasks/:id', authMiddleware, async (req, res) => {
     }
 
     res.status(500).json({
-      message: 'Unable to update book',
+      message: 'Unable to update task',
       error: error.message,
     });
   }
@@ -149,7 +151,9 @@ router.delete('/tasks/:id', authMiddleware, async (req, res) => {
 
     // If the task does not exist, return an error
     if (!deletedTask) {
-      return res.status(404).json({ message: 'Task not found' });
+      return res.status(404).json({
+        message: 'Task not found',
+      });
     }
 
     // Return success message and deleted task
