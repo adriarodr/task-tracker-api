@@ -87,7 +87,7 @@ router.post('/tasks', authMiddleware, async (req, res) => {
     // Return error message if task with this title already exists
     if (error.code === 11000) {
       return res.status(400).json({
-        message: 'A task with this title is already exists',
+        message: 'A task with this title already exists',
       });
     }
 
@@ -103,10 +103,13 @@ router.post('/tasks', authMiddleware, async (req, res) => {
 // @access   Private
 router.put('/tasks/:id', authMiddleware, async (req, res) => {
   try {
+    const { title, description, isCompleted, dueDate } = req.body;
+
     // Updates the task
+    const updates = { title, description, isCompleted, dueDate };
     const query = { _id: req.params.id, user: req.user.id };
 
-    const updatedTask = await Task.findOneAndUpdate(query, req.body, {
+    const updatedTask = await Task.findOneAndUpdate(query, updates, {
       returnDocument: 'after',
       runValidators: true,
     });
@@ -127,7 +130,7 @@ router.put('/tasks/:id', authMiddleware, async (req, res) => {
     // Return error message if task with this title already exists
     if (error.code === 11000) {
       return res.status(400).json({
-        message: 'A task with this title is already exists',
+        message: 'A task with this title already exists',
       });
     }
 
