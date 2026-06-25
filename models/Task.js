@@ -6,9 +6,7 @@ const taskSchema = new Schema({
     type: String,
     required: true,
   },
-  description: {
-    type: String,
-  },
+  description: String,
   isCompleted: {
     type: Boolean,
     default: false,
@@ -20,5 +18,8 @@ const taskSchema = new Schema({
     required: true,
   },
 });
+
+// makes sure that the task title is unique per user
+taskSchema.index({ title: 1, user: 1 }, { unique: true });
 
 module.exports = mongoose.model('Task', taskSchema);

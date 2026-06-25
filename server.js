@@ -1,30 +1,32 @@
+const express = require('express');
 require('dotenv').config();
 
-const express = require('express');
 const connectDB = require('./config/db');
-const app = express();
 
 const authRoutes = require('./routes/authRoutes');
+const taskRoutes = require('./routes/taskRoutes');
 
-const PORT = process.env.PORT;
+const app = express();
 
 app.use(express.json());
 
 connectDB();
 
-app.get('/', (req, res) => {
-  res.send('Welcome to Task Tracker API!');
-});
-
-// Route to comfirm that the API is running
+// Confirm that the API is running
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     message: 'Task Tracker API is running',
   });
 });
 
+// Authentication routes
 app.use('/api/auth', authRoutes);
 
+// Tasks routes
+app.use('/api', taskRoutes);
+
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
+  console.log(`Server running at http://localhost:${PORT}/api/health`);
 });
