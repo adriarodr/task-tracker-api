@@ -9,7 +9,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 // @route   GET /api/tasks
 // @desc    Returns all tasks for the logged-in user
 // @access  Private
-router.get('/', authMiddleware, async (req, res) => {
+router.get('/tasks', authMiddleware, async (req, res) => {
   try {
     // Get all the tasks by user id
     const tasks = await Task.find({ user: req.user.id }).exec();
