@@ -100,7 +100,7 @@ router.post('/tasks', authMiddleware, async (req, res) => {
 
 // @route   PUT /api/tasks/:id
 // @desc    Updates an existing task for the logged-in user
-// @acess   Private
+// @access   Private
 router.put('/tasks/:id', authMiddleware, async (req, res) => {
   try {
     // Updates the task
@@ -117,8 +117,18 @@ router.put('/tasks/:id', authMiddleware, async (req, res) => {
     }
 
     // Return success message and update task
-    res.status(200).json(updatedTask);
+    res.status(200).json({
+      message: 'Task successfully updated',
+      updatedTask: updatedTask,
+    });
   } catch (error) {
+    // Return error message if task with this title already exists
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: 'A task with this title is already exists',
+      });
+    }
+
     res.status(500).json({
       message: 'Unable to update book',
       error: error.message,
@@ -128,7 +138,7 @@ router.put('/tasks/:id', authMiddleware, async (req, res) => {
 
 // @route   DELETE /api/tasks/:id
 // @desc    Deletes a task for the logged-in user
-// @acess   Private
+// @access   Private
 router.delete('/tasks/:id', authMiddleware, async (req, res) => {
   try {
     // Deletes the task
@@ -144,7 +154,7 @@ router.delete('/tasks/:id', authMiddleware, async (req, res) => {
 
     // Return success message and deleted task
     res.status(200).json({
-      message: 'Task deleted successfully',
+      message: 'Task successfully deleted',
       deletedTask: deletedTask,
     });
   } catch (error) {
