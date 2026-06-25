@@ -57,15 +57,15 @@ router.post('/register', async (req, res) => {
   } catch (error) {
     if (error.code === 11000) {
       // Return error message if user with this email already exists
-      res.status(400).json({
+      return res.status(400).json({
         message: 'A user with this email already exists',
       });
-    } else {
-      res.status(400).json({
-        message: 'Unable to create account',
-        error: error.message,
-      });
     }
+
+    res.status(500).json({
+      message: 'Server error during registration',
+      error: error.message,
+    });
   }
 });
 
