@@ -135,7 +135,7 @@ router.put('/tasks/:id', authMiddleware, async (req, res) => {
     }
 
     res.status(500).json({
-      message: 'Unable to update task',
+      message: 'Server error',
       error: error.message,
     });
   }
@@ -166,7 +166,7 @@ router.delete('/tasks/:id', authMiddleware, async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: 'Unable to delete task',
+      message: 'Server error',
       error: error.message,
     });
   }
