@@ -27,7 +27,7 @@ router.post('/register', async (req, res) => {
 
     // Check if all fields are included
     if (!name || !email || !password) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Please provide name, email and password',
       });
     }
