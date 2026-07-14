@@ -1,5 +1,6 @@
-const express = require('express');
 require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
 
 const connectDB = require('./config/db');
 
@@ -7,6 +8,15 @@ const authRoutes = require('./routes/authRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
+
+const PORT = process.env.PORT || 3000;
+
+const corsOptions = {
+  origin: process.env.ORIGIN_URL,
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'PUT', 'POST', 'DELETE'],
+};
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
@@ -24,8 +34,6 @@ app.use('/api/auth', authRoutes);
 
 // Tasks routes
 app.use('/api', taskRoutes);
-
-const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/api/health`);
