@@ -41,6 +41,7 @@ Additionally, the API includes:
 - **[bcryptjs](https://www.npmjs.com/package/bcryptjs)** for password hashing and comparisons
 - **[dotenv](https://www.npmjs.com/package/dotenv)** to load environment variables
 - **[Express.js](https://expressjs.com/en/)** for the server, and handling routes and requests
+- **[CORS](https://www.npmjs.com/package/cors)** to allow an local frontend to communicate with the local backend
 - **[jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)** to generate and verify JWTs
 - **[MongoDB Atlas Database](https://www.mongodb.com/products/platform/atlas-database)** is a cloud application for MongoDB
 - **[Mongoose](https://mongoosejs.com/)** to connect to MongoDB and handle models, validation, and queries
@@ -109,11 +110,13 @@ The API requires the following environment variables:
 
 ```ini
 PORT=your_port_number
+ORIGIN_URL=your_frontend_URL
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
 ```
 
 - `PORT` is the port number the local server runs on
+- `ORIGIN_URL` is your frontend's URL to use for CORS and allow the frontend to communicate with the API
 - `MONGO_URI` is your MongoDB connection string
 - `JWT_SECRET` is the secret key used to sign and verify JWTs
 
